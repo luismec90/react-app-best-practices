@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
-import Question from '../../components/Question';
+import Question from "components/Question";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Quiz() {
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState<any[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState(1);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
     fetch(`https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean`)
@@ -12,7 +14,7 @@ function Quiz() {
         if (data?.response_code === 0) {
           setQuestions([...data.results]);
         } else {
-          console.error('error');
+          console.error("error");
         }
       })
       .catch((error) => {
@@ -20,30 +22,23 @@ function Quiz() {
       });
   }, []);
 
+  useEffect(() => {
+    if (currentQuestionIndex === 9) {
+      navigate("/results", { replace: true });
+    }
+  }, [currentQuestionIndex]);
+
   if (questions.length === 0) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>Quiz</h1>
-      <Question question={questions[currentQuestion - 1].question} />
-
-      {currentQuestion > 1 && (
-        <button
-          type="button"
-          onClick={() => setCurrentQuestion(currentQuestion - 1)}
-        >
-          Prev
-        </button>
-      )}
-
-      {currentQuestion < questions.length - 1 && (
-        <button
-          type="button"
-          onClick={() => setCurrentQuestion(currentQuestion + 1)}
-        >
-          Next
-        </button>
-      )}
+    <div className="flex h-screen justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-500">
+      <Question
+        index={currentQuestionIndex}
+        category={questions[currentQuestionIndex].category}
+        question={questions[currentQuestionIndex].question}
+        correctAnswer={questions[currentQuestionIndex].correct_answer}
+        setCurrentQuestionIndex={setCurrentQuestionIndex}
+      />
     </div>
   );
 }
