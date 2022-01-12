@@ -27,10 +27,12 @@ function Question({ index, category, question, correctAnswer, setCurrentQuestion
 
   return (
     <div>
-      <div className="max-w-md rounded overflow-hidden shadow-lg bg-white py-4 text-center">
+      <div className="max-w-md rounded overflow-hidden shadow-lg bg-white py-4 text-center min-h-[200px]">
         <div className="px-6 py-5">
           <div className="font-bold text-xl mb-5">{category}</div>
-          <p className="text-gray-700 text-base">{question}</p>
+          <p className="text-gray-700 text-base flex items-center" style={{ minHeight: "100px" }}>
+            {question}
+          </p>
         </div>
         <div className="flex justify-center space-x-4 pt-4 pb-2">
           <button
