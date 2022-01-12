@@ -20,6 +20,9 @@ export const quizSlice = createSlice({
   name: "quiz",
   initialState,
   reducers: {
+    removeQuestions: (state) => {
+      state.questions = [];
+    },
     setQuestion: (state, action: PayloadAction<Question>) => {
       const exist = state.questions.find((q) => q.index === action.payload.index);
       if (exist) {
@@ -32,7 +35,7 @@ export const quizSlice = createSlice({
 });
 
 // Export actions
-export const { setQuestion } = quizSlice.actions;
+export const { setQuestion, removeQuestions } = quizSlice.actions;
 
 // Export selectors
 export const selectCount = (state: RootState) => state.quiz;

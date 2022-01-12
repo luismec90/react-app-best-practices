@@ -1,14 +1,19 @@
 import Question from "components/Quiz/Question";
+import { useAppDispatch } from "hooks/hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { removeQuestions } from "store/slices/quizSlice";
 import { decodeHtmlEntities } from "utils/stringsHelper";
 
 function Quiz() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [questions, setQuestions] = useState<any[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
+    dispatch(removeQuestions());
+
     fetch(`https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean`)
       .then((response) => response.json())
       .then((data) => {
