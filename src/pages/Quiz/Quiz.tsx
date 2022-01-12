@@ -1,6 +1,7 @@
-import Question from "components/Question";
+import Question from "components/Quiz/Question";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { decodeHtmlEntities } from "utils/stringsHelper";
 
 function Quiz() {
   const navigate = useNavigate();
@@ -23,19 +24,19 @@ function Quiz() {
   }, []);
 
   useEffect(() => {
-    if (currentQuestionIndex === 9) {
+    if (currentQuestionIndex === 10) {
       navigate("/results", { replace: true });
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, navigate]);
 
-  if (questions.length === 0) return <div>Loading...</div>;
+  if (questions.length === 0 || questions[currentQuestionIndex] === undefined) return <div>Loading...</div>;
 
   return (
-    <div className="flex h-screen justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-500">
+    <div>
       <Question
         index={currentQuestionIndex}
         category={questions[currentQuestionIndex].category}
-        question={questions[currentQuestionIndex].question}
+        question={decodeHtmlEntities(questions[currentQuestionIndex].question)}
         correctAnswer={questions[currentQuestionIndex].correct_answer}
         setCurrentQuestionIndex={setCurrentQuestionIndex}
       />
