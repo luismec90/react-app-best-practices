@@ -1,32 +1,19 @@
 import Question from "components/Quiz/Question";
-import { useAppDispatch } from "hooks/hooks";
+import { useAppDispatch, useAppSelector } from "hooks/hooks";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { removeQuestions } from "store/slices/quizSlice";
+import { fetchQuestions, selectQuiz } from "store/slices/quizSlice";
 import { decodeHtmlEntities } from "utils/stringsHelper";
 
 function Quiz() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [questions, setQuestions] = useState<any[]>([]);
+  const { questions, loading, hasErrors } = useAppSelector(selectQuiz);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
-    dispatch(removeQuestions());
-
-    fetch(`https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data?.response_code === 0) {
-          setQuestions([...data.results]);
-        } else {
-          console.error("error");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+    dispatch(fetchQuestions());
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentQuestionIndex === 10) {
@@ -34,7 +21,8 @@ function Quiz() {
     }
   }, [currentQuestionIndex, navigate]);
 
-  if (questions.length === 0 || questions[currentQuestionIndex] === undefined) return <div>Loading...</div>;
+  if (loading || questions.length === 0 || currentQuestionIndex === 10) return <div>Loading...</div>;
+  if (hasErrors) return <div>Something went wrong, plz contact support contact@support.com</div>;
 
   return (
     <div>
@@ -42,7 +30,6 @@ function Quiz() {
         index={currentQuestionIndex}
         category={questions[currentQuestionIndex].category}
         question={decodeHtmlEntities(questions[currentQuestionIndex].question)}
-        correctAnswer={questions[currentQuestionIndex].correct_answer}
         setCurrentQuestionIndex={setCurrentQuestionIndex}
       />
     </div>

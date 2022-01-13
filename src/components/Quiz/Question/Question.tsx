@@ -1,23 +1,20 @@
 import { useAppDispatch } from "hooks/hooks";
-import { setQuestion } from "store/slices/quizSlice";
+import { setUserAnswer } from "store/slices/quizSlice";
 
-type QuestionProps = {
+interface QuestionProps {
   index: number;
   category: string;
   question: string;
-  correctAnswer: string;
   setCurrentQuestionIndex: (index: number) => void;
-};
+}
 
-function Question({ index, category, question, correctAnswer, setCurrentQuestionIndex }: QuestionProps) {
+function Question({ index, category, question, setCurrentQuestionIndex }: QuestionProps) {
   const dispatch = useAppDispatch();
 
   const setAnswer = (answer: boolean) => {
     dispatch(
-      setQuestion({
+      setUserAnswer({
         index,
-        question,
-        correct_answer: correctAnswer === "True",
         user_answer: answer,
       })
     );
