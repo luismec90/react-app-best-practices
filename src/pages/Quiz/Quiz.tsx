@@ -21,8 +21,13 @@ function Quiz() {
     }
   }, [currentQuestionIndex, navigate]);
 
-  if (loading || questions.length === 0 || currentQuestionIndex === 10) return <div>Loading...</div>;
-  if (hasErrors) return <div>Something went wrong, plz contact support contact@support.com</div>;
+  if (hasErrors) {
+    return <div>Something went wrong, please check your connection, if the problem persist, contact support contact@support.com</div>;
+  }
+
+  if (loading || questions.length === 0 || currentQuestionIndex === 10) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
